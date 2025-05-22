@@ -1,22 +1,18 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { useNotesStore } from '@/stores/notes'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 
-// Initialize notes store
 const notesStore = useNotesStore()
-
-// Create a reactive reference for authentication state
 const isAuthenticated = ref(!!localStorage.getItem('token'))
+const route = useRoute()
 
-// Function to handle logout
 const handleLogout = () => {
   localStorage.removeItem('token')
   isAuthenticated.value = false
   window.location.href = '/'
 }
 
-// Fetch notes when app loads (if user is authenticated)
 onMounted(() => {
   if (isAuthenticated.value) {
     notesStore.fetchNotes()
@@ -30,15 +26,16 @@ onMounted(() => {
     <header class="bg-white shadow">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-          <div class="flex items-center">
-            <h1 class="text-xl font-bold text-blue-600">Notes App</h1>
-          </div>
+
+          <RouterLink to="/" class="flex items-center">
+            <h1 class="text-xl font-bold text-blue-600 cursor-pointer">Notes App</h1>
+          </RouterLink>
 
           <nav class="flex items-center space-x-4">
             <RouterLink
               to="/"
               class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"
-              :class="$route.path === '/' ? 'text-blue-600' : 'text-gray-700'"
+              :class="route.path === '/' ? 'text-blue-600' : 'text-gray-700'"
             >
               Home
             </RouterLink>
@@ -46,7 +43,7 @@ onMounted(() => {
             <RouterLink
               to="/notes"
               class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"
-              :class="$route.path.includes('/notes') ? 'text-blue-600' : 'text-gray-700'"
+              :class="route.path.includes('/notes') ? 'text-blue-600' : 'text-gray-700'"
             >
               My Notes
             </RouterLink>
@@ -55,7 +52,7 @@ onMounted(() => {
               <RouterLink
                 to="/login"
                 class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"
-                :class="$route.path === '/login' ? 'text-blue-600' : 'text-gray-700'"
+                :class="route.path === '/login' ? 'text-blue-600' : 'text-gray-700'"
               >
                 Login
               </RouterLink>
@@ -63,7 +60,7 @@ onMounted(() => {
               <RouterLink
                 to="/register"
                 class="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"
-                :class="$route.path === '/register' ? 'text-blue-600' : 'text-gray-700'"
+                :class="route.path === '/register' ? 'text-blue-600' : 'text-gray-700'"
               >
                 Register
               </RouterLink>
@@ -82,7 +79,7 @@ onMounted(() => {
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 h-screen">
       <RouterView />
     </main>
 
